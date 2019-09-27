@@ -2,8 +2,8 @@
   <div>
     <a href="" title="Close" class="login-close">close &times;</a>
     <h1>Login</h1>
-    <form action="" method="post">
-      <div><?= $_SESSION['message'] ?></div>
+    <form action="index.php" method="post">
+      <div><?php $_SESSION['message'] ?></div>
       <input type="text" placeholder="Username" name="username"/>
       <input type="password" placeholder="Password" name="password"/>
       <br/>

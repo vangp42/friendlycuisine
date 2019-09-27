@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'configuration.php';
 $_SESSION['message'] = '';
 
@@ -20,7 +19,7 @@ if(isset($_POST['signUp'])) {
         $_SESSION['email'] = $email;
         $_SESSION['loggedin'] = true;
 
-        $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)";
+        $sql = "INSERT INTO user (username, email, password) VALUES (:username, :email, :password)";
         $stmt = $conn->prepare($sql);
 
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -53,17 +52,17 @@ if(isset($_POST['signUp'])) {
 
 //--------------- User Login - login.php ---------------//
 if(isset($_POST['logIn'])) {
+  session_start();
+  $username = $_POST['username'];
+  $password = sha1($_POST['password']);
 
-     $username = $_POST['username'];
-     $password = sha1($_POST['password']);
+  $sql = "SELECT userID, username FROM user WHERE username = :username and password = :password";
+  $stmt = $conn->prepare($sql);
 
-     $sql = "SELECT id, username FROM users WHERE username = :username and password = :password";
-     $stmt = $conn->prepare($sql);
+  $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+  $stmt->bindParam(':password', $password, PDO::PARAM_STR);
 
-     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-     $stmt->bindParam(':password', $password, PDO::PARAM_STR);
-
-     $stmt->execute();
+  $stmt->execute();
 
      //If login is successsful, redirect to dashboard
      if($stmt->rowCount() == 1) {
@@ -79,8 +78,4 @@ if(isset($_POST['logIn'])) {
      }
 }
 
-// Testing purposes //
-if($_SESSION['username'] == null) {
-  $_SESSION['username'] = "%username";
-}
 ?>
